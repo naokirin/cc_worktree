@@ -6,6 +6,9 @@
   "bin": {
     "claude-worktree": "dist/cli.js"
   },
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "build": "tsc",
     "dev": "tsc --watch",
