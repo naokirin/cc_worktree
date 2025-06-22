@@ -1,7 +1,7 @@
 import { execCommand, isGitRepository, getGitRoot, sanitizeBranchName } from './utils';
 import { WorktreeInfo } from './types';
 import path from 'path';
-import { existsSync } from 'fs';
+import { existsSync, mkdirSync } from 'fs';
 
 export class WorktreeManager {
   private gitRoot: string;
@@ -57,9 +57,18 @@ export class WorktreeManager {
 
   createWorktree(branchName: string, targetPath?: string): WorktreeInfo {
     const sanitizedBranch = sanitizeBranchName(branchName);
+
+    // .worktreeディレクトリのパスを生成
+    const worktreeDir = path.join(this.gitRoot, '.worktree');
+
+    // .worktreeディレクトリが存在しない場合は作成
+    if (!existsSync(worktreeDir)) {
+      mkdirSync(worktreeDir, { recursive: true });
+    }
+
     const worktreePath = targetPath || path.join(
-      path.dirname(this.gitRoot),
-      `${path.basename(this.gitRoot)}-${sanitizedBranch}`
+      worktreeDir,
+      sanitizedBranch
     );
 
     if (existsSync(worktreePath)) {
