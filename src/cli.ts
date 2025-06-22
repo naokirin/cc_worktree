@@ -18,7 +18,7 @@ const config = configManager.loadConfig();
 const agentManager = new AgentManager(config);
 
 program
-  .name('agent-worktree')
+  .name('claude-worktree')
   .description('Git worktree and Claude Code integration tool for parallel development')
   .version(packageJson.version);
 
@@ -31,7 +31,7 @@ program
   .action(async (branch, options) => {
     try {
       const worktreeManager = new WorktreeManager();
-      
+
       console.log(chalk.blue(`Creating worktree for branch: ${branch}`));
       const worktree = worktreeManager.createWorktree(branch, options.path);
       console.log(chalk.green(`✓ Worktree created at: ${worktree.path}`));
@@ -57,9 +57,9 @@ program
     try {
       const worktreeManager = new WorktreeManager();
       const worktrees = worktreeManager.listWorktrees();
-      
+
       let worktree = worktrees.find(w => w.branch === branchOrPath || w.path === branchOrPath);
-      
+
       if (!worktree) {
         throw new Error(`Worktree not found: ${branchOrPath}`);
       }
@@ -88,7 +88,7 @@ program
   .action((sessionIdOrBranch) => {
     try {
       let session = agentManager.getSession(sessionIdOrBranch);
-      
+
       if (!session) {
         session = agentManager.getSessionForBranch(sessionIdOrBranch);
       }
@@ -115,7 +115,7 @@ program
       if (!options.sessionsOnly) {
         const worktreeManager = new WorktreeManager();
         const worktrees = worktreeManager.listWorktrees();
-        
+
         console.log(chalk.bold('\nWorktrees:'));
         if (worktrees.length === 0) {
           console.log(chalk.gray('  No worktrees found'));
@@ -131,17 +131,17 @@ program
 
       if (!options.worktreesOnly) {
         const sessions = agentManager.listSessions();
-        
+
         console.log(chalk.bold('\nClaude Code Sessions:'));
         if (sessions.length === 0) {
           console.log(chalk.gray('  No active sessions'));
         } else {
           sessions.forEach(session => {
-            const statusColor = session.status === 'running' ? chalk.green : 
-                              session.status === 'error' ? chalk.red : chalk.yellow;
+            const statusColor = session.status === 'running' ? chalk.green :
+              session.status === 'error' ? chalk.red : chalk.yellow;
             const duration = new Date().getTime() - session.startTime.getTime();
             const durationStr = Math.floor(duration / 60000) + 'm';
-            
+
             console.log(`  ${statusColor(session.status)} ${chalk.cyan(session.branch)} (${session.id})`);
             console.log(`    ${chalk.gray(session.worktreePath)}`);
             console.log(`    ${chalk.gray(`PID: ${session.pid || 'N/A'}, Duration: ${durationStr}`)}`);
@@ -162,10 +162,10 @@ program
   .action((branchOrPath, options) => {
     try {
       const worktreeManager = new WorktreeManager();
-      
-      const session = agentManager.getSessionForBranch(branchOrPath) || 
-                     agentManager.getSessionForWorktree(branchOrPath);
-      
+
+      const session = agentManager.getSessionForBranch(branchOrPath) ||
+        agentManager.getSessionForWorktree(branchOrPath);
+
       if (session && session.status === 'running') {
         console.log(chalk.yellow('Stopping active Claude Code session...'));
         agentManager.stopSession(session.id);
@@ -190,13 +190,13 @@ program
   .action(() => {
     try {
       const worktreeManager = new WorktreeManager();
-      
+
       console.log(chalk.blue('Cleaning up sessions...'));
       agentManager.cleanupSessions();
-      
+
       console.log(chalk.blue('Pruning worktrees...'));
       worktreeManager.pruneWorktrees();
-      
+
       console.log(chalk.green('✓ Cleanup completed'));
     } catch (error) {
       console.error(chalk.red(`Error: ${error}`));

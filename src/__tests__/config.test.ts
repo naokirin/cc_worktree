@@ -9,7 +9,7 @@ describe('ConfigManager', () => {
 
   beforeEach(() => {
     configManager = new ConfigManager();
-    testConfigDir = path.join(os.homedir(), '.agent-worktree');
+    testConfigDir = path.join(os.homedir(), '.claude-worktree');
   });
 
   afterEach(() => {
@@ -29,7 +29,7 @@ describe('ConfigManager', () => {
   describe('loadConfig', () => {
     it('should return default config when no config file exists', () => {
       const config = configManager.loadConfig();
-      
+
       expect(config.defaultClaudeCommand).toBe('claude');
       expect(config.maxConcurrentSessions).toBe(5);
       expect(config.sessionTimeout).toBe(30 * 60 * 1000);
@@ -56,7 +56,7 @@ describe('ConfigManager', () => {
   describe('getDefaultConfig', () => {
     it('should return default config without modification', () => {
       const defaultConfig = configManager.getDefaultConfig();
-      
+
       expect(defaultConfig.defaultClaudeCommand).toBe('claude');
       expect(defaultConfig.maxConcurrentSessions).toBe(5);
       expect(defaultConfig.sessionTimeout).toBe(30 * 60 * 1000);
@@ -73,10 +73,10 @@ describe('ConfigManager', () => {
 
       configManager.saveConfig(customConfig);
       configManager.resetConfig();
-      
+
       const resetConfig = configManager.loadConfig();
       const defaultConfig = configManager.getDefaultConfig();
-      
+
       expect(resetConfig).toEqual(defaultConfig);
     });
   });

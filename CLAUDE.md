@@ -1,4 +1,4 @@
-# Agent Worktree 開発ガイド
+# Claude Worktree 開発ガイド
 
 ## プロジェクト概要
 
@@ -99,14 +99,14 @@ npm start            # ビルド済みCLI実行
 ## 設定管理
 
 設定は以下の場所に保存されます：
-- グローバル設定: `~/.agent-worktree/config.json`
-- セッション情報: `~/.agent-worktree/sessions/`
+- グローバル設定: `~/.claude-worktree/config.json`
+- セッション情報: `~/.claude-worktree/sessions/`
 
 ## デバッグ
 
 ```bash
 # デバッグモードでの実行
-DEBUG=agent-worktree* npm start
+DEBUG=claude-worktree* npm start
 
 # TypeScriptソースマップ有効
 node --inspect dist/cli.js

@@ -1,10 +1,10 @@
 {
-  "name": "agent-worktree",
+  "name": "claude-worktree",
   "version": "0.1.0",
   "description": "Git worktree and Claude Code integration tool for parallel development",
   "main": "dist/index.js",
   "bin": {
-    "agent-worktree": "dist/cli.js"
+    "claude-worktree": "dist/cli.js"
   },
   "scripts": {
     "build": "tsc",

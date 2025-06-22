@@ -14,7 +14,7 @@ export class ConfigManager {
   };
 
   constructor() {
-    this.configDir = path.join(os.homedir(), '.agent-worktree');
+    this.configDir = path.join(os.homedir(), '.claude-worktree');
     this.configFile = path.join(this.configDir, 'config.json');
     
     if (!existsSync(this.configDir)) {

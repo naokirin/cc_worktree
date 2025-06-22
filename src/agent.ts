@@ -18,7 +18,7 @@ export class AgentManager {
       ...config,
     };
 
-    this.sessionDir = path.join(os.homedir(), '.agent-worktree', 'sessions');
+    this.sessionDir = path.join(os.homedir(), '.claude-worktree', 'sessions');
     if (!existsSync(this.sessionDir)) {
       mkdirSync(this.sessionDir, { recursive: true });
     }

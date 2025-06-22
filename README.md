@@ -1,4 +1,4 @@
-# Agent Worktree
+# Claude Worktree
 
 Git worktreeとClaude Code統合ツール。複数のブランチで並行開発を効率的に行うためのツールです。
 
@@ -13,7 +13,7 @@ Git worktreeとClaude Code統合ツール。複数のブランチで並行開発
 ## インストール
 
 ```bash
-npm install -g agent-worktree
+npm install -g claude-worktree
 ```
 
 ## 使用方法
@@ -22,19 +22,19 @@ npm install -g agent-worktree
 
 ```bash
 # 新しいブランチ用のworktreeを作成してClaude Codeを起動
-agent-worktree create feature/new-api
+claude-worktree create feature/new-api
 
 # 既存のworktreeでClaude Codeセッションを開始
-agent-worktree start feature/bug-fix
+claude-worktree start feature/bug-fix
 
 # 全worktreeとセッションの状態を確認
-agent-worktree list
+claude-worktree list
 
 # セッションを停止
-agent-worktree stop feature/new-api
+claude-worktree stop feature/new-api
 
 # worktreeを削除
-agent-worktree remove feature/new-api
+claude-worktree remove feature/new-api
 ```
 
 ### コマンド一覧
@@ -43,63 +43,63 @@ agent-worktree remove feature/new-api
 新しいworktreeを作成し、Claude Codeセッションを開始します。
 
 ```bash
-agent-worktree create feature/new-api
-agent-worktree create feature/new-api --path /custom/path
-agent-worktree create feature/new-api --no-session  # セッション無しで作成
+claude-worktree create feature/new-api
+claude-worktree create feature/new-api --path /custom/path
+claude-worktree create feature/new-api --no-session  # セッション無しで作成
 ```
 
 #### `start <branch-or-path>`
 既存のworktreeでClaude Codeセッションを開始します。
 
 ```bash
-agent-worktree start feature/bug-fix
-agent-worktree start /path/to/worktree
+claude-worktree start feature/bug-fix
+claude-worktree start /path/to/worktree
 ```
 
 #### `stop <session-id-or-branch>`
 Claude Codeセッションを停止します。
 
 ```bash
-agent-worktree stop feature/new-api
-agent-worktree stop agent-1234567890-abc123def
+claude-worktree stop feature/new-api
+claude-worktree stop agent-1234567890-abc123def
 ```
 
 #### `list [options]`
 worktreeとセッションの一覧を表示します。
 
 ```bash
-agent-worktree list                # 全て表示
-agent-worktree list --worktrees-only  # worktreeのみ
-agent-worktree list --sessions-only   # セッションのみ
+claude-worktree list                # 全て表示
+claude-worktree list --worktrees-only  # worktreeのみ
+claude-worktree list --sessions-only   # セッションのみ
 ```
 
 #### `remove <branch-or-path> [options]`
 worktreeを削除します。
 
 ```bash
-agent-worktree remove feature/old-feature
-agent-worktree remove feature/old-feature --force  # 強制削除
+claude-worktree remove feature/old-feature
+claude-worktree remove feature/old-feature --force  # 強制削除
 ```
 
 #### `cleanup`
 停止したセッションと不要なworktreeをクリーンアップします。
 
 ```bash
-agent-worktree cleanup
+claude-worktree cleanup
 ```
 
 #### `config [options]`
 設定を管理します。
 
 ```bash
-agent-worktree config --show                    # 設定表示
-agent-worktree config --reset                   # 設定リセット
-agent-worktree config --set maxConcurrentSessions=10
+claude-worktree config --show                    # 設定表示
+claude-worktree config --reset                   # 設定リセット
+claude-worktree config --set maxConcurrentSessions=10
 ```
 
 ## 設定
 
-設定ファイルは `~/.agent-worktree/config.json` に保存されます。
+設定ファイルは `~/.claude-worktree/config.json` に保存されます。
 
 ### 設定オプション
 
@@ -129,17 +129,17 @@ agent-worktree config --set maxConcurrentSessions=10
 
 ### Claude Codeが見つからない
 ```bash
-agent-worktree config --set defaultClaudeCommand=/path/to/claude
+claude-worktree config --set defaultClaudeCommand=/path/to/claude
 ```
 
 ### セッションが応答しない
 ```bash
-agent-worktree cleanup
+claude-worktree cleanup
 ```
 
 ### worktreeが削除できない
 ```bash
-agent-worktree remove <branch> --force
+claude-worktree remove <branch> --force
 ```
 
 ## ライセンス
