@@ -22,7 +22,7 @@ describe('Utils', () => {
     it('should generate unique session IDs', () => {
       const id1 = generateSessionId();
       const id2 = generateSessionId();
-      
+
       expect(id1).not.toBe(id2);
       expect(id1).toMatch(/^agent-\d+-[a-z0-9]+$/);
       expect(id2).toMatch(/^agent-\d+-[a-z0-9]+$/);

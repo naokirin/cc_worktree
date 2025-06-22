@@ -1,4 +1,4 @@
-import { execCommand, isGitRepository, getGitRoot, sanitizeBranchName } from './utils';
+import { execCommand, isGitRepository, getGitRoot, sanitizeBranchName, getUncommittedFiles, getBranchNameFromPath } from './utils';
 import { WorktreeInfo } from './types';
 import path from 'path';
 import { existsSync, mkdirSync } from 'fs';
@@ -101,6 +101,18 @@ export class WorktreeManager {
 
     if (!worktree) {
       throw new Error(`Worktree not found: ${pathOrBranch}`);
+    }
+
+    const uncommittedFiles = getUncommittedFiles(worktree.path);
+    if (uncommittedFiles.length > 0 && !force) {
+      const branchName = getBranchNameFromPath(worktree.path);
+      throw new Error(
+        `Uncommitted files found in worktree.\n\n` +
+        `Branch:\n` +
+        `    ${branchName}\n` +
+        `Detected files:\n` +
+        `    ${uncommittedFiles.join('\n    ')}\n`
+      );
     }
 
     try {

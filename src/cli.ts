@@ -177,7 +177,16 @@ program
         agentManager.removeSession(session.id);
       }
     } catch (error) {
-      console.error(chalk.red(`Error: ${error}`));
+      const errorMessage = error instanceof Error ? error.message : String(error);
+
+      // unstagedファイルのエラーの場合は特別な表示
+      if (errorMessage.includes('Uncommitted files found in worktree')) {
+        console.error(chalk.red('⚠️  Uncommited files detected!'));
+        console.error(chalk.yellow(errorMessage));
+        console.error(chalk.gray('Use --force flag to remove the worktree anyway.'));
+      } else {
+        console.error(chalk.red(`Error: ${errorMessage}`));
+      }
       process.exit(1);
     }
   });
