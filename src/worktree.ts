@@ -66,32 +66,28 @@ export class WorktreeManager {
       throw new Error(`Path already exists: ${worktreePath}`);
     }
 
-    try {
-      const branchExists = this.branchExists(branchName);
-      
-      if (branchExists) {
-        execCommand(`git worktree add "${worktreePath}" "${branchName}"`, this.gitRoot);
-      } else {
-        execCommand(`git worktree add -b "${branchName}" "${worktreePath}"`, this.gitRoot);
-      }
+    const branchExists = this.branchExists(branchName);
 
-      const worktrees = this.listWorktrees();
-      const newWorktree = worktrees.find(w => w.path === worktreePath);
-      
-      if (!newWorktree) {
-        throw new Error('Failed to create worktree');
-      }
-
-      return newWorktree;
-    } catch (error) {
-      throw new Error(`Failed to create worktree: ${error}`);
+    if (branchExists) {
+      execCommand(`git worktree add "${worktreePath}" "${branchName}"`, this.gitRoot);
+    } else {
+      execCommand(`git worktree add -b "${branchName}" "${worktreePath}"`, this.gitRoot);
     }
+
+    const worktrees = this.listWorktrees();
+    const newWorktree = worktrees.find(w => w.path === worktreePath);
+
+    if (!newWorktree) {
+      throw new Error('Failed to create worktree');
+    }
+
+    return newWorktree;
   }
 
   removeWorktree(pathOrBranch: string, force: boolean = false): void {
     const worktrees = this.listWorktrees();
-    const worktree = worktrees.find(w => 
-      w.path === pathOrBranch || w.branch === pathOrBranch
+    const worktree = worktrees.find(w =>
+      w.path === pathOrBranch || w.branch === pathOrBranch || w.branch === `refs/heads/${pathOrBranch}`
     );
 
     if (!worktree) {
@@ -122,7 +118,7 @@ export class WorktreeManager {
 
   getWorktreeForBranch(branchName: string): WorktreeInfo | undefined {
     const worktrees = this.listWorktrees();
-    return worktrees.find(w => w.branch === branchName);
+    return worktrees.find(w => w.branch === branchName || w.branch === `refs/heads/${branchName}`);
   }
 
   pruneWorktrees(): void {

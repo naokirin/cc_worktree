@@ -96,13 +96,13 @@ export class AgentManager {
 
   getSessionForWorktree(worktreePath: string): AgentSession | undefined {
     return Array.from(this.sessions.values()).find(
-      session => session.worktreePath === worktreePath && session.status === 'running'
+      session => session.worktreePath === worktreePath
     );
   }
 
   getSessionForBranch(branch: string): AgentSession | undefined {
     return Array.from(this.sessions.values()).find(
-      session => session.branch === branch && session.status === 'running'
+      session => session.branch === branch || session.branch === `refs/heads/${branch}`
     );
   }
 
@@ -151,7 +151,7 @@ export class AgentManager {
           try {
             const sessionData = readFileSync(path.join(this.sessionDir, file), 'utf-8');
             const session: AgentSession = JSON.parse(sessionData);
-            
+
             session.startTime = new Date(session.startTime);
             if (session.lastActivity) {
               session.lastActivity = new Date(session.lastActivity);

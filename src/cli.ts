@@ -58,7 +58,7 @@ program
       const worktreeManager = new WorktreeManager();
       const worktrees = worktreeManager.listWorktrees();
 
-      let worktree = worktrees.find(w => w.branch === branchOrPath || w.path === branchOrPath);
+      let worktree = worktrees.find(w => w.branch === branchOrPath || w.branch === `refs/heads/${branchOrPath}` || w.path === branchOrPath);
 
       if (!worktree) {
         throw new Error(`Worktree not found: ${branchOrPath}`);
