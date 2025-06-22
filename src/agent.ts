@@ -111,6 +111,10 @@ export class AgentManager {
     const expiredSessions: string[] = [];
 
     for (const [sessionId, session] of this.sessions.entries()) {
+      if (session.pid && session.status === 'stopped') {
+        this.removeSession(sessionId);
+      }
+
       if (session.status === 'running' && session.lastActivity) {
         const timeSinceActivity = now.getTime() - session.lastActivity.getTime();
         if (timeSinceActivity > this.config.sessionTimeout!) {
@@ -131,6 +135,7 @@ export class AgentManager {
 
     for (const sessionId of expiredSessions) {
       this.stopSession(sessionId);
+      this.removeSession(sessionId);
     }
   }
 
