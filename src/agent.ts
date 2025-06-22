@@ -13,7 +13,7 @@ export class AgentManager {
     this.config = {
       defaultClaudeCommand: 'claude',
       maxConcurrentSessions: 5,
-      sessionTimeout: 30 * 60 * 1000, // 30 minutes
+      sessionTimeout: 60 * 60 * 1000, // 60 minutes
       autoCleanup: true,
       ...config,
     };
