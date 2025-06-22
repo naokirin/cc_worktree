@@ -1,2 +1,5 @@
 # git worktree directories
 .worktree
+
+# claude
+.claude
