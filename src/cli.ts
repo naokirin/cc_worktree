@@ -40,7 +40,6 @@ program
         console.log(chalk.blue('Starting Claude Code session...'));
         const session = await agentManager.startSession(worktree.path, branch);
         console.log(chalk.green(`✓ Claude Code session started (ID: ${session.id})`));
-        console.log(chalk.gray(`  PID: ${session.pid}`));
         console.log(chalk.gray(`  Path: ${session.worktreePath}`));
       }
     } catch (error) {
@@ -73,7 +72,6 @@ program
       console.log(chalk.blue(`Starting Claude Code session for: ${worktree.branch}`));
       const session = await agentManager.startSession(worktree.path, worktree.branch!);
       console.log(chalk.green(`✓ Claude Code session started (ID: ${session.id})`));
-      console.log(chalk.gray(`  PID: ${session.pid}`));
       console.log(chalk.gray(`  Path: ${session.worktreePath}`));
     } catch (error) {
       console.error(chalk.red(`Error: ${error}`));
@@ -144,7 +142,7 @@ program
 
             console.log(`  ${statusColor(session.status)} ${chalk.cyan(session.branch)} (${session.id})`);
             console.log(`    ${chalk.gray(session.worktreePath)}`);
-            console.log(`    ${chalk.gray(`PID: ${session.pid || 'N/A'}, Duration: ${durationStr}`)}`);
+            console.log(`    ${chalk.gray(`Duration: ${durationStr}`)}`);
           });
         }
       }

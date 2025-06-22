@@ -72,13 +72,6 @@ export class AgentManager {
       throw new Error(`Session not found: ${sessionId}`);
     }
 
-    if (session.pid) {
-      try {
-        process.kill(session.pid, 'SIGTERM');
-      } catch (error) {
-        console.warn(`Failed to kill process ${session.pid}: ${error}`);
-      }
-    }
 
     session.status = 'stopped';
     this.sessions.set(sessionId, session);
@@ -111,7 +104,7 @@ export class AgentManager {
     const expiredSessions: string[] = [];
 
     for (const [sessionId, session] of this.sessions.entries()) {
-      if (session.pid && session.status === 'stopped') {
+      if (session.status === 'stopped') {
         this.removeSession(sessionId);
       }
 
@@ -122,15 +115,6 @@ export class AgentManager {
         }
       }
 
-      if (session.pid && session.status === 'running') {
-        try {
-          process.kill(session.pid, 0);
-        } catch {
-          session.status = 'stopped';
-          this.sessions.set(sessionId, session);
-          this.saveSession(session);
-        }
-      }
     }
 
     for (const sessionId of expiredSessions) {

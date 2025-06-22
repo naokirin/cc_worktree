@@ -15,7 +15,6 @@ export interface AgentSession {
   status: 'running' | 'stopped' | 'error' | 'completed';
   startTime: Date;
   lastActivity?: Date;
-  pid?: number;
 }
 
 export interface Config {

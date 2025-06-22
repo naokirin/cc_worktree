@@ -61,7 +61,7 @@ export async function spawnCommand(
 
     if (options.detached && !options.interactive) {
       child.unref();
-      resolve(child.pid!);
+      resolve(0);
     } else {
       child.on('close', (code) => {
         if (code === 0) {
