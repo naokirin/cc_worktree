@@ -16,6 +16,23 @@ Git worktreeとClaude Code統合ツール。複数のブランチで並行開発
 npm install -g claude-worktree
 ```
 
+### npxでの実行
+
+グローバルインストールを避けたい場合は、npxを使用して直接実行することもできます：
+
+```bash
+# 新しいブランチ用のworktreeを作成してClaude Codeを起動
+npx claude-worktree create feature/new-api
+
+# 既存のworktreeでClaude Codeセッションを開始
+npx claude-worktree start feature/bug-fix
+
+# 全worktreeとセッションの状態を確認
+npx claude-worktree list
+```
+
+> **注意**: npxを使用する場合、初回実行時にパッケージのダウンロードが発生するため、少し時間がかかる場合があります。
+
 ## 使用方法
 
 ### 基本的な使い方
@@ -117,54 +134,4 @@ claude-worktree config --set maxConcurrentSessions=10
   \"sessionTimeout\": 3600000,
   \"autoCleanup\": true
 }
-```
-
-## 要件
-
-- Node.js 18以上
-- Git 2.5以上
-- Claude Code CLI
-
-## トラブルシューティング
-
-### Claude Codeが見つからない
-```bash
-claude-worktree config --set defaultClaudeCommand=/path/to/claude
-```
-
-### セッションが応答しない
-```bash
-claude-worktree cleanup
-```
-
-### worktreeが削除できない
-```bash
-claude-worktree remove <branch> --force
-```
-
-## ライセンス
-
-MIT License
-
-## 貢献
-
-Issue報告やPull Requestは歓迎します。
-
-## 開発
-
-```bash
-# 依存関係をインストール
-npm install
-
-# 開発モード
-npm run dev
-
-# ビルド
-npm run build
-
-# テスト
-npm test
-
-# リント
-npm run lint
 ```
