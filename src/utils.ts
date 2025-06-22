@@ -50,16 +50,16 @@ export function generateSessionId(): string {
 export async function spawnCommand(
   command: string,
   args: string[],
-  options: { cwd?: string; detached?: boolean } = {}
+  options: { cwd?: string; detached?: boolean; interactive?: boolean } = {}
 ): Promise<number> {
   return new Promise((resolve, reject) => {
     const child = spawn(command, args, {
       cwd: options.cwd,
       detached: options.detached || false,
-      stdio: options.detached ? 'ignore' : 'inherit',
+      stdio: options.interactive ? 'inherit' : (options.detached ? 'ignore' : 'inherit'),
     });
 
-    if (options.detached) {
+    if (options.detached && !options.interactive) {
       child.unref();
       resolve(child.pid!);
     } else {

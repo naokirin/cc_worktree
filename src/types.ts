@@ -12,7 +12,7 @@ export interface AgentSession {
   id: string;
   worktreePath: string;
   branch: string;
-  status: 'running' | 'stopped' | 'error';
+  status: 'running' | 'stopped' | 'error' | 'completed';
   startTime: Date;
   lastActivity?: Date;
   pid?: number;

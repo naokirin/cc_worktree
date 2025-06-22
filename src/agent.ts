@@ -46,16 +46,16 @@ export class AgentManager {
     };
 
     try {
-      const pid = await spawnCommand(
+      const result = await spawnCommand(
         this.config.defaultClaudeCommand!,
         [],
         {
           cwd: worktreePath,
-          detached: true,
+          interactive: true,
         }
       );
 
-      session.pid = pid;
+      session.status = 'completed';
       this.sessions.set(sessionId, session);
       this.saveSession(session);
 
