@@ -1,11 +1,9 @@
 import { execSync, spawn } from 'child_process';
-import { existsSync } from 'fs';
-import path from 'path';
 
 export function execCommand(command: string, cwd?: string): string {
   try {
-    return execSync(command, { 
-      cwd, 
+    return execSync(command, {
+      cwd,
       encoding: 'utf-8',
       stdio: 'pipe'
     }).toString().trim();
@@ -74,4 +72,28 @@ export async function spawnCommand(
       child.on('error', reject);
     }
   });
+}
+
+export function getUncommittedFiles(cwd: string): string[] {
+  try {
+    const output = execCommand('git status --porcelain', cwd);
+    if (!output) {
+      return [];
+    }
+
+    return output
+      .split('\n')
+      .filter(line => line.trim() !== '')
+      .map(line => line.substring(3));
+  } catch (error) {
+    return [];
+  }
+}
+
+export function getBranchNameFromPath(worktreePath: string): string {
+  try {
+    return execCommand('git branch --show-current', worktreePath);
+  } catch {
+    return execCommand('git rev-parse --short HEAD', worktreePath);
+  }
 }
