@@ -1,5 +1,11 @@
+# MacOS system files
+.DS_Store
+
 # git worktree directories
 .worktree
 
 # claude
 .claude
+
+# node_modules
+node_modules
