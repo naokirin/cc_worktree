@@ -46,16 +46,16 @@ export class AgentManager {
     };
 
     try {
-      const pid = await spawnCommand(
+      const result = await spawnCommand(
         this.config.defaultClaudeCommand!,
         [],
         {
           cwd: worktreePath,
-          detached: true,
+          interactive: true,
         }
       );
 
-      session.pid = pid;
+      session.status = 'completed';
       this.sessions.set(sessionId, session);
       this.saveSession(session);
 
@@ -72,13 +72,6 @@ export class AgentManager {
       throw new Error(`Session not found: ${sessionId}`);
     }
 
-    if (session.pid) {
-      try {
-        process.kill(session.pid, 'SIGTERM');
-      } catch (error) {
-        console.warn(`Failed to kill process ${session.pid}: ${error}`);
-      }
-    }
 
     session.status = 'stopped';
     this.sessions.set(sessionId, session);
@@ -96,13 +89,13 @@ export class AgentManager {
 
   getSessionForWorktree(worktreePath: string): AgentSession | undefined {
     return Array.from(this.sessions.values()).find(
-      session => session.worktreePath === worktreePath && session.status === 'running'
+      session => session.worktreePath === worktreePath
     );
   }
 
   getSessionForBranch(branch: string): AgentSession | undefined {
     return Array.from(this.sessions.values()).find(
-      session => session.branch === branch && session.status === 'running'
+      session => session.branch === branch || session.branch === `refs/heads/${branch}`
     );
   }
 
@@ -111,6 +104,10 @@ export class AgentManager {
     const expiredSessions: string[] = [];
 
     for (const [sessionId, session] of this.sessions.entries()) {
+      if (session.status === 'stopped') {
+        this.removeSession(sessionId);
+      }
+
       if (session.status === 'running' && session.lastActivity) {
         const timeSinceActivity = now.getTime() - session.lastActivity.getTime();
         if (timeSinceActivity > this.config.sessionTimeout!) {
@@ -118,19 +115,11 @@ export class AgentManager {
         }
       }
 
-      if (session.pid && session.status === 'running') {
-        try {
-          process.kill(session.pid, 0);
-        } catch {
-          session.status = 'stopped';
-          this.sessions.set(sessionId, session);
-          this.saveSession(session);
-        }
-      }
     }
 
     for (const sessionId of expiredSessions) {
       this.stopSession(sessionId);
+      this.removeSession(sessionId);
     }
   }
 
@@ -151,7 +140,7 @@ export class AgentManager {
           try {
             const sessionData = readFileSync(path.join(this.sessionDir, file), 'utf-8');
             const session: AgentSession = JSON.parse(sessionData);
-            
+
             session.startTime = new Date(session.startTime);
             if (session.lastActivity) {
               session.lastActivity = new Date(session.lastActivity);

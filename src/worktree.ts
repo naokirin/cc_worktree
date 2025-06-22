@@ -1,7 +1,7 @@
 import { execCommand, isGitRepository, getGitRoot, sanitizeBranchName } from './utils';
 import { WorktreeInfo } from './types';
 import path from 'path';
-import { existsSync } from 'fs';
+import { existsSync, mkdirSync } from 'fs';
 
 export class WorktreeManager {
   private gitRoot: string;
@@ -57,41 +57,46 @@ export class WorktreeManager {
 
   createWorktree(branchName: string, targetPath?: string): WorktreeInfo {
     const sanitizedBranch = sanitizeBranchName(branchName);
+
+    // .worktreeディレクトリのパスを生成
+    const worktreeDir = path.join(this.gitRoot, '.worktree');
+
+    // .worktreeディレクトリが存在しない場合は作成
+    if (!existsSync(worktreeDir)) {
+      mkdirSync(worktreeDir, { recursive: true });
+    }
+
     const worktreePath = targetPath || path.join(
-      path.dirname(this.gitRoot),
-      `${path.basename(this.gitRoot)}-${sanitizedBranch}`
+      worktreeDir,
+      sanitizedBranch
     );
 
     if (existsSync(worktreePath)) {
       throw new Error(`Path already exists: ${worktreePath}`);
     }
 
-    try {
-      const branchExists = this.branchExists(branchName);
-      
-      if (branchExists) {
-        execCommand(`git worktree add "${worktreePath}" "${branchName}"`, this.gitRoot);
-      } else {
-        execCommand(`git worktree add -b "${branchName}" "${worktreePath}"`, this.gitRoot);
-      }
+    const branchExists = this.branchExists(branchName);
 
-      const worktrees = this.listWorktrees();
-      const newWorktree = worktrees.find(w => w.path === worktreePath);
-      
-      if (!newWorktree) {
-        throw new Error('Failed to create worktree');
-      }
-
-      return newWorktree;
-    } catch (error) {
-      throw new Error(`Failed to create worktree: ${error}`);
+    if (branchExists) {
+      execCommand(`git worktree add "${worktreePath}" "${branchName}"`, this.gitRoot);
+    } else {
+      execCommand(`git worktree add -b "${branchName}" "${worktreePath}"`, this.gitRoot);
     }
+
+    const worktrees = this.listWorktrees();
+    const newWorktree = worktrees.find(w => w.path === worktreePath);
+
+    if (!newWorktree) {
+      throw new Error('Failed to create worktree');
+    }
+
+    return newWorktree;
   }
 
   removeWorktree(pathOrBranch: string, force: boolean = false): void {
     const worktrees = this.listWorktrees();
-    const worktree = worktrees.find(w => 
-      w.path === pathOrBranch || w.branch === pathOrBranch
+    const worktree = worktrees.find(w =>
+      w.path === pathOrBranch || w.branch === pathOrBranch || w.branch === `refs/heads/${pathOrBranch}`
     );
 
     if (!worktree) {
@@ -122,7 +127,7 @@ export class WorktreeManager {
 
   getWorktreeForBranch(branchName: string): WorktreeInfo | undefined {
     const worktrees = this.listWorktrees();
-    return worktrees.find(w => w.branch === branchName);
+    return worktrees.find(w => w.branch === branchName || w.branch === `refs/heads/${branchName}`);
   }
 
   pruneWorktrees(): void {
