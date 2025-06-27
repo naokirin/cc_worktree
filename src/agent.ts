@@ -55,6 +55,9 @@ export class AgentManager {
     };
 
     try {
+      this.saveSession(session);
+      this.sessions.set(sessionId, session);
+
       const result = await spawnCommand(
         this.config.defaultClaudeCommand!,
         [],
@@ -65,7 +68,6 @@ export class AgentManager {
       );
 
       session.status = 'completed';
-      this.sessions.set(sessionId, session);
       this.saveSession(session);
 
       return session;
