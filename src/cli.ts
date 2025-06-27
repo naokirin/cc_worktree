@@ -13,9 +13,9 @@ const packageJson = JSON.parse(
 );
 
 const program = new Command();
-const configManager = new ConfigManager();
+const configManager = ConfigManager.createForRepository();
 const config = configManager.loadConfig();
-const agentManager = new AgentManager(config);
+const agentManager = AgentManager.createForRepository(config);
 
 program
   .name('claude-worktree')
