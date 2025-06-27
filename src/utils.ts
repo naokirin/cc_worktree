@@ -97,3 +97,8 @@ export function getBranchNameFromPath(worktreePath: string): string {
     return execCommand('git rev-parse --short HEAD', worktreePath);
   }
 }
+
+export function hashRepositoryPath(repoPath: string): string {
+  const crypto = require('crypto');
+  return crypto.createHash('md5').update(repoPath).digest('hex');
+}

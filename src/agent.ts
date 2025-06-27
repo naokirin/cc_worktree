@@ -1,5 +1,5 @@
 import { AgentSession, Config } from './types';
-import { spawnCommand, generateSessionId } from './utils';
+import { spawnCommand, generateSessionId, getGitRoot, hashRepositoryPath } from './utils';
 import { existsSync, writeFileSync, readFileSync, mkdirSync } from 'fs';
 import path from 'path';
 import os from 'os';
@@ -8,8 +8,9 @@ export class AgentManager {
   private sessions: Map<string, AgentSession> = new Map();
   private config: Config;
   private sessionDir: string;
+  private repositoryPath?: string;
 
-  constructor(config: Config = {}) {
+  constructor(config: Config = {}, repositoryPath?: string) {
     this.config = {
       defaultClaudeCommand: 'claude',
       maxConcurrentSessions: 5,
@@ -18,7 +19,15 @@ export class AgentManager {
       ...config,
     };
 
-    this.sessionDir = path.join(os.homedir(), '.claude-worktree', 'sessions');
+    this.repositoryPath = repositoryPath;
+    
+    if (repositoryPath) {
+      const repoHash = hashRepositoryPath(repositoryPath);
+      this.sessionDir = path.join(os.homedir(), '.claude-worktree', 'repositories', repoHash, 'sessions');
+    } else {
+      this.sessionDir = path.join(os.homedir(), '.claude-worktree', 'sessions');
+    }
+    
     if (!existsSync(this.sessionDir)) {
       mkdirSync(this.sessionDir, { recursive: true });
     }
@@ -46,6 +55,9 @@ export class AgentManager {
     };
 
     try {
+      this.saveSession(session);
+      this.sessions.set(sessionId, session);
+
       const result = await spawnCommand(
         this.config.defaultClaudeCommand!,
         [],
@@ -56,7 +68,6 @@ export class AgentManager {
       );
 
       session.status = 'completed';
-      this.sessions.set(sessionId, session);
       this.saveSession(session);
 
       return session;
@@ -162,6 +173,22 @@ export class AgentManager {
     const sessionFile = path.join(this.sessionDir, `${sessionId}.json`);
     if (existsSync(sessionFile)) {
       require('fs').unlinkSync(sessionFile);
+    }
+  }
+
+  getRepositoryHash(): string | undefined {
+    if (this.repositoryPath) {
+      return hashRepositoryPath(this.repositoryPath);
+    }
+    return undefined;
+  }
+
+  static createForRepository(config: Config = {}, cwd: string = process.cwd()): AgentManager {
+    try {
+      const repoRoot = getGitRoot(cwd);
+      return new AgentManager(config, repoRoot);
+    } catch {
+      return new AgentManager(config);
     }
   }
 }
