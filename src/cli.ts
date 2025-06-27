@@ -64,7 +64,7 @@ program
       }
 
       const existingSession = agentManager.getSessionForWorktree(worktree.path);
-      if (existingSession) {
+      if (existingSession?.status === 'running') {
         console.log(chalk.yellow(`Session already running for this worktree (ID: ${existingSession.id})`));
         return;
       }
