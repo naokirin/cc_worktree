@@ -1,6 +1,6 @@
 {
   "name": "claude-worktree",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "Git worktree and Claude Code integration tool for parallel development",
   "main": "dist/index.js",
   "bin": {
