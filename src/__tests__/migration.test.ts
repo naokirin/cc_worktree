@@ -15,7 +15,7 @@ describe('MigrationManager', () => {
     testBaseDir = path.join(os.homedir(), '.claude-worktree');
     testOldSessionDir = path.join(testBaseDir, 'sessions');
     testRepositoriesDir = path.join(testBaseDir, 'repositories');
-    
+
     if (existsSync(testBaseDir)) {
       rmSync(testBaseDir, { recursive: true, force: true });
     }
@@ -26,7 +26,7 @@ describe('MigrationManager', () => {
       if (existsSync(testBaseDir)) {
         rmSync(testBaseDir, { recursive: true, force: true });
       }
-    } catch (error) {
+    } catch {
       // Ignore cleanup errors
     }
   });
@@ -38,6 +38,8 @@ describe('MigrationManager', () => {
 
     it('should return true when old sessions exist and no migration marker', () => {
       mkdirSync(testOldSessionDir, { recursive: true });
+      // Create a dummy session file to make directory non-empty
+      writeFileSync(path.join(testOldSessionDir, 'dummy.json'), '{}');
       expect(migrationManager.isMigrationNeeded()).toBe(true);
     });
 
@@ -45,19 +47,21 @@ describe('MigrationManager', () => {
       mkdirSync(testOldSessionDir, { recursive: true });
       const markerFile = path.join(testBaseDir, '.migrated');
       writeFileSync(markerFile, new Date().toISOString());
-      
+
       expect(migrationManager.isMigrationNeeded()).toBe(false);
     });
   });
 
   describe('migrateToRepositoryBased', () => {
     it('should handle empty old sessions directory', async () => {
-      await expect(migrationManager.migrateToRepositoryBased()).resolves.not.toThrow();
+      await expect(
+        migrationManager.migrateToRepositoryBased()
+      ).resolves.not.toThrow();
     });
 
     it('should migrate sessions to repository-based structure', async () => {
       mkdirSync(testOldSessionDir, { recursive: true });
-      
+
       const testSession: AgentSession = {
         id: 'test-session-1',
         worktreePath: '/test/repo/worktree',
@@ -71,11 +75,15 @@ describe('MigrationManager', () => {
       writeFileSync(sessionFile, JSON.stringify(testSession, null, 2));
 
       const mockMigrationManager = migrationManager as unknown as {
-        getRepositoryPathFromWorktree: jest.MockedFunction<(worktreePath: string) => string | null>;
+        getRepositoryPathFromWorktree: jest.MockedFunction<
+          (worktreePath: string) => string | null
+        >;
       };
-      
+
       const originalMethod = mockMigrationManager.getRepositoryPathFromWorktree;
-      mockMigrationManager.getRepositoryPathFromWorktree = jest.fn(() => '/test/repo');
+      mockMigrationManager.getRepositoryPathFromWorktree = jest.fn(
+        () => '/test/repo'
+      );
 
       await migrationManager.migrateToRepositoryBased();
 
@@ -93,7 +101,7 @@ describe('MigrationManager', () => {
 
     it('should remove old session files', () => {
       mkdirSync(testOldSessionDir, { recursive: true });
-      
+
       const sessionFile = path.join(testOldSessionDir, 'test-session.json');
       writeFileSync(sessionFile, '{}');
 
