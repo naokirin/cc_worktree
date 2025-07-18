@@ -18,7 +18,7 @@ export class ConfigManager {
   };
 
   constructor(repositoryPath?: string) {
-    this.configDir = path.join(os.homedir(), '.claude-worktree');
+    this.configDir = path.join(os.homedir(), '.cc-worktree');
     this.configFile = path.join(this.configDir, 'config.json');
     
     if (repositoryPath) {

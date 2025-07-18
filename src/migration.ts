@@ -10,7 +10,7 @@ export class MigrationManager {
   private repositoriesDir: string;
 
   constructor() {
-    this.baseDir = path.join(os.homedir(), '.claude-worktree');
+    this.baseDir = path.join(os.homedir(), '.cc-worktree');
     this.oldSessionDir = path.join(this.baseDir, 'sessions');
     this.repositoriesDir = path.join(this.baseDir, 'repositories');
   }

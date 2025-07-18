@@ -23,9 +23,9 @@ export class AgentManager {
     
     if (repositoryPath) {
       const repoHash = hashRepositoryPath(repositoryPath);
-      this.sessionDir = path.join(os.homedir(), '.claude-worktree', 'repositories', repoHash, 'sessions');
+      this.sessionDir = path.join(os.homedir(), '.cc-worktree', 'repositories', repoHash, 'sessions');
     } else {
-      this.sessionDir = path.join(os.homedir(), '.claude-worktree', 'sessions');
+      this.sessionDir = path.join(os.homedir(), '.cc-worktree', 'sessions');
     }
     
     if (!existsSync(this.sessionDir)) {

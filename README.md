@@ -1,4 +1,4 @@
-# Claude Worktree
+# cc-worktree
 
 Git worktreeとClaude Code統合ツール。複数のブランチで並行開発を効率的に行うためのツールです。
 
@@ -13,7 +13,7 @@ Git worktreeとClaude Code統合ツール。複数のブランチで並行開発
 ## インストール
 
 ```bash
-npm install -g claude-worktree
+npm install -g cc-worktree
 ```
 
 ### npxでの実行
@@ -22,13 +22,13 @@ npm install -g claude-worktree
 
 ```bash
 # 新しいブランチ用のworktreeを作成してClaude Codeを起動
-npx claude-worktree create feature/new-api
+npx cc-worktree create feature/new-api
 
 # 既存のworktreeでClaude Codeセッションを開始
-npx claude-worktree start feature/bug-fix
+npx cc-worktree start feature/bug-fix
 
 # 全worktreeとセッションの状態を確認
-npx claude-worktree list
+npx cc-worktree list
 ```
 
 > **注意**: npxを使用する場合、初回実行時にパッケージのダウンロードが発生するため、少し時間がかかる場合があります。
@@ -39,19 +39,19 @@ npx claude-worktree list
 
 ```bash
 # 新しいブランチ用のworktreeを作成してClaude Codeを起動
-claude-worktree create feature/new-api
+cc-worktree create feature/new-api
 
 # 既存のworktreeでClaude Codeセッションを開始
-claude-worktree start feature/bug-fix
+cc-worktree start feature/bug-fix
 
 # 全worktreeとセッションの状態を確認
-claude-worktree list
+cc-worktree list
 
 # セッションを停止
-claude-worktree stop feature/new-api
+cc-worktree stop feature/new-api
 
 # worktreeを削除
-claude-worktree remove feature/new-api
+cc-worktree remove feature/new-api
 ```
 
 ### コマンド一覧
@@ -60,63 +60,63 @@ claude-worktree remove feature/new-api
 新しいworktreeを作成し、Claude Codeセッションを開始します。
 
 ```bash
-claude-worktree create feature/new-api
-claude-worktree create feature/new-api --path /custom/path
-claude-worktree create feature/new-api --no-session  # セッション無しで作成
+cc-worktree create feature/new-api
+cc-worktree create feature/new-api --path /custom/path
+cc-worktree create feature/new-api --no-session  # セッション無しで作成
 ```
 
 #### `start <branch-or-path>`
 既存のworktreeでClaude Codeセッションを開始します。
 
 ```bash
-claude-worktree start feature/bug-fix
-claude-worktree start /path/to/worktree
+cc-worktree start feature/bug-fix
+cc-worktree start /path/to/worktree
 ```
 
 #### `stop <session-id-or-branch>`
 Claude Codeセッションを停止します。
 
 ```bash
-claude-worktree stop feature/new-api
-claude-worktree stop agent-1234567890-abc123def
+cc-worktree stop feature/new-api
+cc-worktree stop agent-1234567890-abc123def
 ```
 
 #### `list [options]`
 worktreeとセッションの一覧を表示します。
 
 ```bash
-claude-worktree list                # 全て表示
-claude-worktree list --worktrees-only  # worktreeのみ
-claude-worktree list --sessions-only   # セッションのみ
+cc-worktree list                # 全て表示
+cc-worktree list --worktrees-only  # worktreeのみ
+cc-worktree list --sessions-only   # セッションのみ
 ```
 
 #### `remove <branch-or-path> [options]`
 worktreeを削除します。
 
 ```bash
-claude-worktree remove feature/old-feature
-claude-worktree remove feature/old-feature --force  # 強制削除
+cc-worktree remove feature/old-feature
+cc-worktree remove feature/old-feature --force  # 強制削除
 ```
 
 #### `cleanup`
 停止したセッションと不要なworktreeをクリーンアップします。
 
 ```bash
-claude-worktree cleanup
+cc-worktree cleanup
 ```
 
 #### `config [options]`
 設定を管理します。
 
 ```bash
-claude-worktree config --show                    # 設定表示
-claude-worktree config --reset                   # 設定リセット
-claude-worktree config --set maxConcurrentSessions=10
+cc-worktree config --show                    # 設定表示
+cc-worktree config --reset                   # 設定リセット
+cc-worktree config --set maxConcurrentSessions=10
 ```
 
 ## 設定
 
-設定ファイルは `~/.claude-worktree/config.json` に保存されます。
+設定ファイルは `~/.cc-worktree/config.json` に保存されます。
 
 ### 設定オプション
 
