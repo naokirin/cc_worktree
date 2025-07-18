@@ -18,7 +18,7 @@ const config = configManager.loadConfig();
 const agentManager = AgentManager.createForRepository(config);
 
 program
-  .name('claude-worktree')
+  .name('cc-worktree')
   .description('Git worktree and Claude Code integration tool for parallel development')
   .version(packageJson.version);
 

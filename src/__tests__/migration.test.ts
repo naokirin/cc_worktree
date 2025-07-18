@@ -12,7 +12,7 @@ describe('MigrationManager', () => {
 
   beforeEach(() => {
     migrationManager = new MigrationManager();
-    testBaseDir = path.join(os.homedir(), '.claude-worktree');
+    testBaseDir = path.join(os.homedir(), '.cc-worktree');
     testOldSessionDir = path.join(testBaseDir, 'sessions');
     testRepositoriesDir = path.join(testBaseDir, 'repositories');
 

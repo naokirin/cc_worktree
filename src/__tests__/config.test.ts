@@ -9,7 +9,7 @@ describe('ConfigManager', () => {
 
   beforeEach(() => {
     configManager = new ConfigManager();
-    testConfigDir = path.join(os.homedir(), '.claude-worktree');
+    testConfigDir = path.join(os.homedir(), '.cc-worktree');
   });
 
   afterEach(() => {
